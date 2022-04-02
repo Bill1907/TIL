@@ -1,2 +1,3 @@
 # TIL
-Today I Learned
+
+내가 일하면서 배우고 학습한 것들을 정리 하자!
