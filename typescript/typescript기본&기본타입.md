@@ -104,3 +104,139 @@ let num2: number;
 num2 = '1';
 ```
  위와같은 경우에는 첫번째에는 잘 돌아가지만 두번째 예시에서는 타입 경고 메세지를 띄운다. 왜냐하면 num2에는 number type이 할당되었기 때문에 number 타입으로만 사용해야한다. 
+ 
+## object
+  그렇다면 객체 타입인 경우에는 어떻게 적용해야할까?
+```ts
+const person = {
+  name: 'bill',
+  age: 27,
+};
+
+// 위 person의 타입
+const person {
+  name: string;
+  age: number;
+}
+
+// 변수에 타입을 할당하는 방법
+const person: {
+  name: string;
+  age: 27;
+} = {
+  name: 'bill',
+  age: 27,
+}
+```
+예를들어 person에 객체를 할당하게 되면 아래처럼 타입추론으로 인해 타입이 할당된다. {}는 object로 타입을 할당해주는 것과 같다.
+
+##중첩된 개체 및 타입
+```ts 
+const product = {
+  id: 'abc1',
+  price: 12.99,
+  tags: ['great-offer', 'hot-and-new'],
+  details: {
+    title: 'Red Carpet',
+    description: 'A great carpet - almost brand-new!'
+  }
+}
+// 이러한 객체의 타입은 아래와 같다. 
+{
+  id: string;
+  price: number;
+  tags: string[];
+  details: {
+    title: string;
+    description: string;
+  }
+}
+```
+보는것과 같이 객체안에 객체 타입이 있다.
+
+## 배열 Array
+```ts
+let hobby: string[];
+hobby = ['Sport', 'Tennis'];
+```
+위의 예시와 같이 배열의 타입을 할당해 줄 수 있다. 여기에서 string은 배열안의 하나의 element의 타입이다. 하지만 배열안에 string이 아닌 여러가지를 넣고 싶다면 Any를 사용하면 된다. 
+
+## 튜플 tuple
+  tuple은 []안에 두가지 요소가 들어가 있는 것을 말한다. 타입스크립트에서는 이렇게 타입을 할당 할 수 있다.
+```ts 
+let tuple: [string, number];
+
+tuple = ['bill', 27]; // 반드시 두개의 요소가 들어가야하며, 타입 또한 일치 해야한다. 
+tuple.push('ex'); // 하지만, 튜블안에 추가가 가능함. 이 경우 주의해야한다. 
+
+```
+
+## 열거형(enum)
+enum이라는 개념은 다른 언어에는 있지만 javascript에는 없는 개념이다. 예를들어 어떤 상태 값을 배열안에 문자열 값으로 넣는 것인데 ['사용중', '미사용중']이 있다고 하면 다른데에서 사용할 때 '사용중'은 0이 되고, '미사용중'은 1이 된다는 것이다. 이 방법은 메모리 사용량을 줄여준다. 
+```ts
+// in javascript 
+const ADMIN = 0;
+const READ_ONLY = 1;
+const AUTHOR = 2;
+
+const person = {
+  role: ADMIN, // 0
+}
+// in typescript
+enum Role { ADMIN, READ_ONLY, AUTHOR }; // 0, 1, 2로 할당됨.
+
+const person = {
+  role: Role.ADMIN, // 0
+}
+```
+자바스크립트로 사용한것처럼 모든 상수를 하나하나 정의해주고 관래해주어야 한다. 반면에 타입스크립트에서는 enum을 사용해서 간단하게 관리할 수 있다. 
+
+또한 각 요소에 원하는 숫자 / 문자열 등을 할당 할 수 있는데 방법은 아래와 같다. 
+```ts
+// 10, 11, 12
+enum Role { ADMIN = 10, READ_ONLY, AUTHOR };
+
+// 10, 15, 20
+enum Role { ADMIN = 10, READ_ONLY = 15, AUTHOR = 20 };
+
+ // 'admin', 15, 20
+enum Role { ADMIN = 'admin', READ_ONLY = 15, AUTHOR = 20 };
+```
+
+## Any 타입
+ any의 경우에는 어떤 타입도 넣을 수 있다는 의미이다. 하지만 any를 사용할 경우 typescript를 사용하는 의미가 없기 때문에 지양한다. 
+ 일단 사용법은 다음과 같다. 
+  ```ts
+  let people: any[]; // 배열안에 어떤 타입의 데이터가 들어갈 수 있다. 
+  ```
+  
+ ## 조합 타입 union type
+ 서로 다른 두 종류의 값을 사용해야 하는 애플리케이션에서 함수나 상수 혹은 변수의 매개변수를 사용해야 한다면 유니언 타입을 사용하여 타입스크립트에게 숫자나 문자열 중 하나를 사용해도 괜찮다는 것을 알릴 수 있다.
+```ts 
+function combine(input1: number | string, input2: number | string) {
+  return input1 + input2;
+}
+
+const combineAges = combine(20, 30);
+console.log(combineAges); // 50
+
+const combineNames = combine('Jack', 'Mary');
+console.log(combineNames); // 'JackMary'
+```
+이 경우 문자열인경우 사용하는 연산자와 숫자일때 사용하는 연산자가 다를 수 있는 데 그 경우에는 런타임 타입 검사를 통해서 해결 할 수 있다. 
+```ts 
+function combine(input1: number | string, input2: number | string) {
+  if(typeof input1 === 'number' && typeof input2 === 'number') {
+    return input1 + input2;
+  } else {
+    return input1.toString() + input2.toString();
+  }
+}
+
+const combineAges = combine(20, 30);
+console.log(combineAges); // 50
+
+const combineNames = combine('Jack', 'Mary');
+console.log(combineNames); // 'JackMary'
+```
+## 리터럴 타입 
