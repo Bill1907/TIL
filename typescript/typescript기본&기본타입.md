@@ -240,3 +240,120 @@ const combineNames = combine('Jack', 'Mary');
 console.log(combineNames); // 'JackMary'
 ```
 ## 리터럴 타입 
+ 리터럴 타입은 string 이나 number 등과 같은 핵심 타입을 기반으로 한다. 하지만 특정 목적으로 아무 문자열이 아닌 특정 문자열을 사용한다. 
+```ts 
+function combine(
+  input1: number | string, 
+  input2: number | string,
+  resultConversion: 'as-text' | 'as-number' // 이렇게 사용하는 경우를 리터럴 타입이라고 한다. 
+  ) {
+  if(typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
+    return +input1 + }input2;
+  } else {
+    return input1.toString() + input2.toString();
+  }
+}
+```
+위의 예시에서 보는 것처럼 resulConversion에 'as-text' 또는 'as-number'만 들어갈 수 있고 다른 string이 들어갈 경우 경고메세지가 뜨게 된다.
+
+## Type Alies 사용자 정의 타입
+
+리터럴 타입 예시에서 보는 것처럼 함수안에 타입을 정의하면 복잡해 보일 수 있는데, 타입스크립트는 타입을 따로 지정하는것이 된다. 
+```ts 
+// 타입을 정의
+type Combinable = number | sting;
+type ConversionDescriptor = 'as-text' | 'as-number';
+
+function combine(
+  input1: Combinable, 
+  input2: Combinable,
+  resultConversion: ConversionDescriptor,
+  ) {
+  if(typeof input1 === 'number' && typeof input2 === 'number' || resultConversion === 'as-number') {
+    return +input1 + }input2;
+  } else {
+    return input1.toString() + input2.toString();
+  }
+}
+
+```
+
+## 함수 반환 티입 및 '무효'
+
+```ts
+function add(num1: number, num2: number) {
+  return num1 + num2;
+}
+```
+  typescript에서는 함수 반환 타입을 지정 할 수 있다. 위 예시의 함수에서 리턴값의 타입은 number이다. 
+```ts 
+function add(num1: number, num2: number) {
+  return num1 + num2;
+}
+
+function printResult(num: number): void {
+  console.log('result is' + num);
+}
+
+printResult(add(10, 5)); // 콘솔에 'result is 15' 찍힘.
+```
+  하지만 어떤 함수는 리턴값이 없을 수 있다. 그 경우에는 void를 사용한다. void는 리턴하는 값을 무시한다는 의미이다.
+  printResult 함수를 보게 되면 리턴하는 값이 없고 그냥 콘솔로그만 찍고 끝나게 된다. 함수의 리턴값이 없는경우는 void를 사용하게된다. 
+``` ts 
+function printResult(num: number): void {
+  console.log('result is' + num);
+}
+
+function printResult(num: number): undefined {
+  console.log('result is' + num);
+  return; // 이게 반드시 있어야해^^
+}
+```
+  또한 void 말고 undefined 타입이 존재하는데 undefined 타입을 사용할 경우 위에서 보이는 것처럼 return 값이 없을때를 의미한다. 
+  void와 undefined를 주의해서 사용해야한다. 
+
+## 타입의 기능을 하는 함수 
+```ts 
+function add(num1: number, num2: number) {
+  return num1 + num2;
+}
+
+let combineValue;
+
+combineValue = add; 
+combineValue = 5
+
+console.log(combineValue(10, 5)); // combineValue는 함수가 아니라고 에러가 뜬다. 
+```
+위의 예시를 보게 되면 combineValue의 타입 any라고 나온다. 그래서 다시 숫자5를 할당할 경우 타입스크립트에서 에러를 잡지 못한다. 함수의 타입을 할당해 주는 방법이 있다. 
+```ts 
+function add(num1: number, num2: number) {
+  return num1 + num2;
+}
+
+let combineValue: Function; // Function 타입을 할당
+
+combineValue = add; 
+combineValue = 5 // 컴파일 에러뜸!!
+
+```
+이렇게 될 경우 combineValue는 Function타입을 가지게 된다. 그리고 함수 타입을 좀더 디테일 하게 정할 수 있다.
+```ts
+let combineValue: (a: number, b: number) => number;
+```
+
+위의 예시를 보면 화살표함수로 Function 타입을 할당해 주었고 그 함수안에 들어가는 매개변수의 갯수와 타입을 지정해 주었다. 그리고 그 함수가 리턴해 주는 값이 숫자여야한다는 것도 지정해 줄 수 있다. 
+
+```ts 
+function addAndHandle(num1: number, num2: number, cd: (result : number) => void) {
+  const result = num1 + num2;
+  cd(result);
+}
+addAndHandle(10, 5, (result) => {
+  console.log(result);
+})
+```
+
+위에서 보는 것처럼 콜백함수도 타입을 지정할 수 있다. 이렇게 함으로서 콜백함수를 넣을때 어떤 값을 넣고 어떤 값이 리던 될것인지 예상하면서 개발 할 수 있다.
+
+
