@@ -205,8 +205,8 @@ enum Role { ADMIN = 'admin', READ_ONLY = 15, AUTHOR = 20 };
 
 ## Any 타입
  any의 경우에는 어떤 타입도 넣을 수 있다는 의미이다. 하지만 any를 사용할 경우 typescript를 사용하는 의미가 없기 때문에 지양한다. 
- 일단 사용법은 다음과 같다. 
-  ```ts
+ 일단 사용법은 다음과 같다.
+```ts
   let people: any[]; // 배열안에 어떤 타입의 데이터가 들어갈 수 있다. 
   ```
   
