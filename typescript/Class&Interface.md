@@ -89,4 +89,4 @@ const accounting = new ITDepartment('d1', ['Bill']);
 
 이렇게 해서 상속받아서 사용할 수 있으며 Department에서 사용할 수 있는 매서드 또한 상속되서 사용할 수 있다. 
 
-##
+##    
