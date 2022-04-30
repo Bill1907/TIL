@@ -1,4 +1,4 @@
-# Class & Interfaces
+# Class
 
 ## 클래스만들기 
 
