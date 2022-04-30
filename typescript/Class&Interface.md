@@ -224,3 +224,27 @@ class ITDepartment extends Department {
   }
 }
 ```
+
+## 싱글톤 패턴
+
+class 에서 하나의 객체만 생성하게끔 할 수 있는데 이것을 싱글톤 패턴이라고 한다. 
+```ts 
+class AccountingDepartment extends Department {
+  private static instance: AccountingDepartment;
+  
+  private constructor(id: string, private reports: string[]) {
+    super(id, 'Accounting');
+    this.lastReport = reports[0];
+  }
+  static getInstance() {
+    if (AccountingDepartment.instance) {
+      return this.instance;
+    }
+    this.instance = new AccountingDepartment('d2', []);
+    return this.instance;
+  }
+}
+
+const accounting = AccountingDepartment.getInstance();
+
+```
