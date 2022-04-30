@@ -225,9 +225,9 @@ class ITDepartment extends Department {
 }
 ```
 
-## 싱글톤 패턴
+## 싱글톤 클래스
 
-class 에서 하나의 객체만 생성하게끔 할 수 있는데 이것을 싱글톤 패턴이라고 한다. 
+싱글톤 클래스는 “new”로 생성하지 않고 메소드를 호출하여 구성하므로 특정 시점에 반드시 단 하나의 클래스 인스턴스가 존재한다.
 ```ts 
 class AccountingDepartment extends Department {
   private static instance: AccountingDepartment;
